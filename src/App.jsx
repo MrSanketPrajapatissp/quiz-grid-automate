@@ -1,61 +1,52 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import propTypes from "prop-types";
+
 export default function App() {
   return <QuestionGrid />;
 }
 
 function QuestionGrid() {
-  const [selectId, setId] = useState(1);
+  const [questions, setQuestions] = useState([]);
+  const [selectedId, setSelectedId] = useState(1);
+
+  // Fetch the questions from the JSON server
+  useEffect(() => {
+    fetch("http://localhost:3000/questions") // Adjust the URL if needed
+      .then((response) => response.json())
+      .then((data) => {
+        setQuestions(data);
+        if (data.length > 0) {
+          setSelectedId(data[0].id); // Set the initial question to the first one
+        }
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  }, []);
 
   return (
     <div>
-      <Question id={selectId} />
+      <Question id={selectedId} questions={questions} />
 
       <div className="all-button-grid">
         <div className="container">
-          <div
-            className="button"
-            onClick={function () {
-              setId(1);
-            }}
-          >
-            1
-          </div>
-
-          <div
-            className="button"
-            onClick={function () {
-              setId(2);
-            }}
-          >
-            2
-          </div>
-
-          <div
-            className="button"
-            onClick={function () {
-              setId(3);
-            }}
-          >
-            3
-          </div>
+          {questions.map((question) => (
+            <div
+              key={question.id}
+              className="button"
+              onClick={() => setSelectedId(question.id)}
+            >
+              {question.id}
+            </div>
+          ))}
         </div>
       </div>
     </div>
   );
 }
 
-function Question({ id }) {
-  const [getquestion, setquestion] = useState([
-    { id: 1, question: "My first Question", description: "description" },
-    { id: 2, question: "My Second Question", description: "description" },
-    { id: 3, question: "My Third Question", description: "description" },
-    { id: 4, question: "My Fourth Question", description: "description" },
-  ]);
-
+function Question({ id, questions }) {
   // Find the question with the matching id
-  const currentQuestion = getquestion.find((q) => q.id === id);
+  const currentQuestion = questions.find((q) => q.id === id);
 
   return (
     <div>
@@ -74,4 +65,5 @@ function Question({ id }) {
 
 Question.propTypes = {
   id: propTypes.number.isRequired,
+  questions: propTypes.array.isRequired,
 };

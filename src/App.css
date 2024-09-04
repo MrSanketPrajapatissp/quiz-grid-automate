@@ -1,0 +1,33 @@
+.container {
+  padding: 10px;
+  display: grid;
+  width: 1fr;
+  grid-template-columns: repeat(15, 2fr);
+  grid-gap: 1em;
+  padding-top: 20px;
+}
+
+.all-button-grid {
+  /* display: flex;
+  justify-content: center; */
+  margin-top: 20%;
+}
+
+.button {
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  background-color: #1db4de;
+  color: white;
+  font-size: 2em;
+  border-radius: 5px;
+  box-shadow: 1px 1px 1px #333;
+  transition: .2s;
+
+  &:hover {
+    box-shadow: 5px 5px 5px fuchsia;
+    transform: scale(1.05);
+    background-color: pink;
+    color: black;
+  }
+}
